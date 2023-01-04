@@ -14,6 +14,7 @@ db.init_app(app)
 def home():
     return "Home Page"
 
+
 def token_required(f):
    @wraps(f)
    def decorator(*args, **kwargs):
@@ -22,12 +23,12 @@ def token_required(f):
            token = request.headers["x-access-tokens"]
 
        if not token:
-           return jsonify({"message": "Valid Token Missing"})
+           return jsonify({"status": "Valid Token Missing"})
         try:
            data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
            current_user = Users.query.filter_by(public_id = data["public_id"]).first()
        except:
-           return jsonify({"message": "token is invalid"})
+           return jsonify({"status": "Invalid Token"})
 
        return f(current_user, *args, **kwargs)
    return decorator
@@ -70,7 +71,7 @@ def login():
 
     if check_password_hash(user.password, data.get("password")):
 
-        jwt_token = jwt.encode({"id" : user.public_id,
+        jwt_token = jwt.encode({"public_id" : user.public_id,
                                 "exp" : datetime.datetime.utcnow() + datetime.timedelta(minutes = 10)},
                                 app.config["SECRET_KEY"],
                                 "HS256")
@@ -78,4 +79,15 @@ def login():
 
     else:
         return jsonify({"status" : "Wrong password"})
+
+@app.route("/post")
+@token_required
+def post(current_user):
+    data = request.get_json()
+        if not data or not data["image"] or not data["msg"]:
+            return jsonify({"status" : "Cannot post"})
+        return jsonify({"status" : "Enter something"})
+
+    if data[]
+
 
