@@ -21,3 +21,52 @@ class User(db.Model) :
 
     def as_dict(self) : 
         return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
+
+
+class Post(db.Model) :
+
+    __tablename__ = "post"
+
+    id = db.Column(db.Integer , primary_key = True)
+    userid = db.Column(db.Integer)  #foreign key
+    image = db.Column(db.String(500))
+    msg = db.Column(db.String(500))
+    created_time = db.Column(db.DateTime)
+    no_of_likes = db.Columns(db.Integer)
+    no_of_dislikes = db.Column(db.Integer) 
+
+    def __init__(self , id, userid , image , msg , created_time , no_of_likes , no_of_dislikes) :
+        self.id = id 
+        self.userid = userid   # foreign key
+        self.image = image
+        self.msg = msg 
+        self.created_time = created_time
+        self.no_of_likes = no_of_likes
+        self.no_of_dislikes = no_of_dislikes
+
+    def as_dict(self) : 
+        return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
+
+
+class Comment(db.Model) :
+
+    __tablename__ = "comment" 
+
+    id = db.Column(db.Integer , primary_key =True) 
+    userid = db.Column(Integer) # foreign  key
+    postid = db.Column(Integer) #foreign key
+    msg = db.Column(String(100))
+    created_time = db.Column(DateTime)
+
+    def __init__(self , id , userid , postid , msg , created_time) :
+        self.id = id
+        self.userid = userid
+        self.postid = postid
+        self.msg = msg 
+        self.created_time = created_time
+
+    def as_dict(self) :
+        return {c.name: str(getattr(self , c.name)) for c in self.__table__.columns}
+
+
+
