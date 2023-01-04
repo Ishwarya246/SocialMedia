@@ -23,8 +23,8 @@ def token_required(f):
            token = request.headers["x-access-tokens"]
 
        if not token:
-           return jsonify({"status": "Valid Token Missing"})
-        try:
+           return jsonify({"status" : "Valid Token Missing"})
+       try:
            data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
            current_user = Users.query.filter_by(public_id = data["public_id"]).first()
        except:
@@ -84,10 +84,5 @@ def login():
 @token_required
 def post(current_user):
     data = request.get_json()
-        if not data or not data["image"] or not data["msg"]:
-            return jsonify({"status" : "Cannot post"})
-        return jsonify({"status" : "Enter something"})
-
-    if data[]
-
-
+    if not data or not data["image"] or not data["msg"]:
+        return jsonify({"status" : "Cannot post"})
