@@ -76,7 +76,7 @@ class Likes(db.Model):
 
     id = db.Column(db.Integer , primary_key = True)
     userid = db.Column(db.Integer ) #foreign key 
-    postid = db.postid(db.Integer)
+    postid = db.Column(db.Integer)
     status = db.Column(db.String(100))
     
     def __init__(self , id , userid , postid , status) :

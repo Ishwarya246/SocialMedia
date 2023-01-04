@@ -90,7 +90,7 @@ def post(current_user):
     if not data or not data["image"] or not data["msg"]:
         return jsonify({"status" : "Cannot post"})
 
-    record = Post(current_user , data["image"] ,data["msg"] ,datetime.datetime.utcnow() 0,0)
+    record = Post(current_user , data["image"] ,data["msg"] ,datetime.datetime.utcnow(), 0,0)
     db.session.add(record)
     db.session.commit()
     return jsonify({"status" : "Posted Successfully"})
