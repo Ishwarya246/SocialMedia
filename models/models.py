@@ -5,16 +5,16 @@ db = SQLAlchemy()
 class User(db.Model) :
 
     __tablename__ = "user"
-    id = db.Column(db.Integer , primary_key = True)
-    public_id  = db.Column(db.String(100) , unique = True)
+    id = db.Column(db.Integer, primary_key = True)
+    userid  = db.Column(db.String(100) , unique = True)
     name  = db.Column(db.String(100))
     email = db.Column(db.String(100))
-    password = db.Column(db.String(100))
+    password = db.Column(db.String(256))
 
 
-    def __init__(self, id , public_id, name , email , password) :
-        self.id = id 
-        self.public_id = public_id
+    def __init__(self, userid, name , email , password) :
+        # self.id = id
+        self.userid= userid
         self.name =  name
         self.email = email
         self.password = password 
@@ -28,21 +28,21 @@ class Post(db.Model) :
     __tablename__ = "post"
 
     id = db.Column(db.Integer , primary_key = True)
+    postid = db.Column(db.String(100), unique = True)
     userid = db.Column(db.Integer)  #foreign key
     image = db.Column(db.String(500))
     msg = db.Column(db.String(500))
     created_time = db.Column(db.DateTime)
     no_of_likes = db.Column(db.Integer)
-    no_of_dislikes = db.Column(db.Integer) 
 
-    def __init__(self , id, userid , image , msg , created_time , no_of_likes , no_of_dislikes) :
-        self.id = id 
+    def __init__(self, postid, userid , image , msg , created_time , no_of_likes) :
+        # self.id = id
+        self.postid = postid
         self.userid = userid   # foreign key
         self.image = image
         self.msg = msg 
         self.created_time = created_time
         self.no_of_likes = no_of_likes
-        self.no_of_dislikes = no_of_dislikes
 
     def as_dict(self) : 
         return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
@@ -52,9 +52,10 @@ class Comment(db.Model) :
 
     __tablename__ = "comment" 
 
-    id = db.Column(db.Integer , primary_key =True) 
-    userid = db.Column(db.Integer) # foreign  key
-    postid = db.Column(db.Integer) #foreign key
+    id = db.Column(db.Integer , primary_key =True)
+    commentid = db.Column(db.String(100))
+    userid = db.Column(db.String(100)) # foreign  key
+    postid = db.Column(db.String(100)) #foreign key
     msg = db.Column(db.String(100))
     created_time = db.Column(db.DateTime)
 
@@ -69,21 +70,18 @@ class Comment(db.Model) :
         return {c.name: str(getattr(self , c.name)) for c in self.__table__.columns}
 
 
-
-class Likes(db.Model): 
+class Like(db.Model):
 
     __tablename__ = "likes" 
 
     id = db.Column(db.Integer , primary_key = True)
     userid = db.Column(db.Integer ) #foreign key 
     postid = db.Column(db.Integer)
-    status = db.Column(db.String(100))
-    
-    def __init__(self , id , userid , postid , status) :
+
+    def __init__(self , id , userid , postid):
         self.id = id 
         self.userid = userid
         self.postid = postid
-        self.status = status
 
     def as_dict(self) :
         return {c.name: str(getattr(self , c.name)) for c in self.__table__.columns}
