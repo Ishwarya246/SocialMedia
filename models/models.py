@@ -70,3 +70,20 @@ class Comment(db.Model) :
 
 
 
+class Likes(db.Model): 
+
+    __tablename__ = "likes" 
+
+    id = db.Column(db.Integer , primary_key = True)
+    userid = db.Column(db.Integer ) #foreign key 
+    postid = db.postid(db.Integer)
+    status = db.Column(db.String(100))
+    
+    def __init__(self , id , userid , postid , status) :
+        self.id = id 
+        self.userid = userid
+        self.postid = postid
+        self.status = status
+
+    def as_dict(self) :
+        return {c.name: str(getattr(self , c.name)) for c in self.__table__.columns}
