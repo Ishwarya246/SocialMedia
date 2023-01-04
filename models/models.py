@@ -32,7 +32,7 @@ class Post(db.Model) :
     image = db.Column(db.String(500))
     msg = db.Column(db.String(500))
     created_time = db.Column(db.DateTime)
-    no_of_likes = db.Columns(db.Integer)
+    no_of_likes = db.Column(db.Integer)
     no_of_dislikes = db.Column(db.Integer) 
 
     def __init__(self , id, userid , image , msg , created_time , no_of_likes , no_of_dislikes) :
@@ -53,10 +53,10 @@ class Comment(db.Model) :
     __tablename__ = "comment" 
 
     id = db.Column(db.Integer , primary_key =True) 
-    userid = db.Column(Integer) # foreign  key
-    postid = db.Column(Integer) #foreign key
-    msg = db.Column(String(100))
-    created_time = db.Column(DateTime)
+    userid = db.Column(db.Integer) # foreign  key
+    postid = db.Column(db.Integer) #foreign key
+    msg = db.Column(db.String(100))
+    created_time = db.Column(db.DateTime)
 
     def __init__(self , id , userid , postid , msg , created_time) :
         self.id = id
