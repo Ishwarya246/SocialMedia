@@ -34,11 +34,9 @@ def token_required(f):
        return f(current_user, *args, **kwargs)
    return decorator
 
-@app.route("/signup", methods = ["POST", "GET"])
+@app.route("/signup", methods = ["POST"])
 def signup():
 
-    # if request.methods == 'GET':
-    #     return "Hi"
     data = request.form
 
     name = data.get("name")
@@ -60,13 +58,9 @@ def signup():
     else:
         return jsonify({"status" : "User already exists"})
 
-@app.route("/login", methods = ["POST", "GET"])
+@app.route("/login", methods = ["POST"])
 def login():
 
-    # if request.method == 'GET':
-    #     return "Hi"
-
-    # data = request.form
     data = request.get_json()
     print(data)
     if not data or not data.get("email") or not data.get("password"):
@@ -89,7 +83,7 @@ def login():
     else:
         return jsonify({"status" : "Wrong password"})
 
-@app.route("/post")
+@app.route("/post", methods = ["POST"])
 @token_required
 def post(current_user):
     data = request.get_json()
