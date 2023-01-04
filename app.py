@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response, render_template
+from flask import Flask, request, jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from models.models import db, User
@@ -34,8 +34,11 @@ def token_required(f):
        return f(current_user, *args, **kwargs)
    return decorator
 
-@app.route("/signup")
+@app.route("/signup", methods = ["POST", "GET"])
 def signup():
+
+    # if request.methods == 'GET':
+    #     return "Hi"
     data = request.form
 
     name = data.get("name")
@@ -57,10 +60,15 @@ def signup():
     else:
         return jsonify({"status" : "User already exists"})
 
-@app.route("/login")
+@app.route("/login", methods = ["POST", "GET"])
 def login():
-    data = request.form
 
+    # if request.method == 'GET':
+    #     return "Hi"
+
+    # data = request.form
+    data = request.get_json()
+    print(data)
     if not data or not data.get("email") or not data.get("password"):
 
         return jsonify({"status" : "Enter valid email or password"})

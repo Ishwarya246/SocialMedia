@@ -2,4 +2,4 @@
 
 export FLASK_APP=./app.py
 
-pipenv run flask shell
+pipenv run python dbcreate.py
