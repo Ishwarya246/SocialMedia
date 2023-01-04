@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+from flask_cors import CORS
 from models.models import db, User
 import jwt, uuid, datetime
 
 app = Flask(__name__)
+CORS(app)
 
 app.config["SECRET_KEY"]='004f2af45d3a4e161a7dd2d17fdae47f'
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqldb://root:1234@localhost/SocialMedia"
