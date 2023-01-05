@@ -125,7 +125,6 @@ def like(current_user):
     db.session.commit()
     return jsonify({"status" : "Success"})
     
-
 @app.route("/comment" , methods = ["POST"]) 
 @token_required
 def comment(current_user): 
@@ -139,6 +138,19 @@ def comment(current_user):
     db.session.add(record)
     db.session.commit()
     
-     
+@app.route("\showcomment" , methods = ["POST"]) 
+@token_required
+def showComment(current_user) :
 
+    data = request.get_json()
+    if not data or not data["postid"] :
+        return jsonify({"status" : "Postid missing"})
+
+    comment = Comment.query.filter_by(postid = data["postid"]).all()
+
+    response = []
+    for i in comment:
+        response.append(i.as_dict())
+
+    
 
