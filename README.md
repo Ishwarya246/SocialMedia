@@ -1,7 +1,11 @@
-## Social Media API
+# Social Media API
 A simple Flask API for a social media
 
 # Features
+User can create an account
+User can post content with images and text
+User can like other posts
+User can comment on other posts
 
-# Session Management
-Session Management is done using JWT tokens
+# JWT Token
+Session Management and Authorization is done using JWT tokens
