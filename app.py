@@ -23,7 +23,6 @@ def token_required(f):
        token = None
        if "Authorization" in request.headers:
            token = request.headers["Authorization"]
-
        if not token:
            return jsonify({"status" : "Valid Token Missing"})
 
@@ -156,7 +155,7 @@ def showComment(current_user) :
 
     return response
 
-@app.route("/showpost" , method = ["POST"]) 
+@app.route("/showpost" , methods = ["POST"])
 @token_required
 def showPost(current_user) :
 
