@@ -124,5 +124,21 @@ def like(current_user):
 
     db.session.commit()
     return jsonify({"status" : "Success"})
+    
+
+@app.route("/comment" , methods = ["POST"]) 
+@token_required
+def comment(current_user): 
+
+    data = request.get_json()
+
+    if not data or not data["postid"] or not data["msg"]:
+        return jsonify({"status" : "Cannot Comment"})
+
+    record = Comment(str(uuid.uuid4()) , current_user.userid , data["postid"] , data["msg"] , datetime.datetime.utcnow())
+    db.session.add(record)
+    db.session.commit()
+    
+     
 
 
