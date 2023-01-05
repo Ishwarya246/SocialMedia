@@ -34,7 +34,7 @@ def token_required(f):
            # , options={'verify_exp': False}
            current_user = User.query.filter_by(userid = data["userid"]).first()
 
-       except jwt.ExpiredSignatureError:
+       except:
            return jsonify({"status": "Invalid Token"})
 
        return f(current_user, *args, **kwargs)
@@ -43,7 +43,7 @@ def token_required(f):
 @app.route("/signup", methods = ["POST"])
 def signup():
 
-    data = request.form
+    data = request.get_json()
 
     name = data.get("name")
     email = data.get("email")
@@ -60,13 +60,14 @@ def signup():
         db.session.add(user)
         db.session.commit()
 
-        return jsonify({"status" : "Registered Successfully"})
+        return jsonify({"status" : "Success"})
     else:
         return jsonify({"status" : "User already exists"})
 
 @app.route("/login", methods = ["POST"])
 def login():
-    data = request.form
+    data = request.get_json()
+    print(data)
     if not data or not data.get("email") or not data.get("password"):
 
         return jsonify({"status" : "Enter valid email or password"})
@@ -93,7 +94,7 @@ def post(current_user):
     if not data or not data["image"] or not data["msg"]:
         return jsonify({"status" : "Cannot post"})
 
-    record = Post(current_user , data["image"] ,data["msg"] ,datetime.datetime.utcnow(), 0, 0)
+    record = Post(str(uuid.uuid4()), current_user.userid , data["image"] ,data["msg"] ,datetime.datetime.utcnow(), 0)
 
     db.session.add(record)
     db.session.commit()
@@ -113,13 +114,13 @@ def like(current_user):
     like = Like.query.filter_by(userid = current_user.userid).filter_by(postid = data["postid"]).first()
 
     if not like:
-        record = Like(current_user, data["postid"])
+        record = Like(current_user.userid, data["postid"])
         db.session.add(record)
-        setattr(post, "no_of_likes", user.no_of_likes + 1)
+        setattr(post, "no_of_likes", post.no_of_likes + 1)
 
     else:
-        Like.query().filter_by(userid = current_user).delete()
-        setattr(post, "no_of_likes", user.no_of_likes - 1)
+        Like.query.filter_by(userid = current_user.userid).delete()
+        setattr(post, "no_of_likes", post.no_of_likes - 1)
 
     db.session.commit()
     return jsonify({"status" : "Success"})

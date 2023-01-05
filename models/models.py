@@ -29,7 +29,7 @@ class Post(db.Model) :
 
     id = db.Column(db.Integer , primary_key = True)
     postid = db.Column(db.String(100), unique = True)
-    userid = db.Column(db.Integer)  #foreign key
+    userid = db.Column(db.String(100))  #foreign key
     image = db.Column(db.String(500))
     msg = db.Column(db.String(500))
     created_time = db.Column(db.DateTime)
@@ -75,11 +75,11 @@ class Like(db.Model):
     __tablename__ = "likes" 
 
     id = db.Column(db.Integer , primary_key = True)
-    userid = db.Column(db.Integer ) #foreign key 
-    postid = db.Column(db.Integer)
+    userid = db.Column(db.String(100)) #foreign key
+    postid = db.Column(db.String(100))
 
-    def __init__(self , id , userid , postid):
-        self.id = id 
+    def __init__(self, userid, postid):
+        # self.id = id
         self.userid = userid
         self.postid = postid
 
