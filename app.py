@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from flask_cors import CORS
-from models.models import db, User, Like, Post
+from models.models import db, User, Like, Post, Comment
 import jwt, uuid, datetime
 
 app = Flask(__name__)
@@ -137,8 +137,10 @@ def comment(current_user):
     record = Comment(str(uuid.uuid4()) , current_user.userid , data["postid"] , data["msg"] , datetime.datetime.utcnow())
     db.session.add(record)
     db.session.commit()
+
+    return jsonify({"status" : "Success"})
     
-@app.route("\showcomment" , methods = ["POST"]) 
+@app.route("/showcomment" , methods = ["POST"])
 @token_required
 def showComment(current_user) :
 
@@ -151,6 +153,8 @@ def showComment(current_user) :
     response = []
     for i in comment:
         response.append(i.as_dict())
+
+    return response
 
     
 

@@ -59,8 +59,9 @@ class Comment(db.Model) :
     msg = db.Column(db.String(100))
     created_time = db.Column(db.DateTime)
 
-    def __init__(self , id , userid , postid , msg , created_time) :
-        self.id = id
+    def __init__(self, commentid, userid , postid , msg , created_time) :
+        # self.id = id
+        self.commentid = commentid
         self.userid = userid
         self.postid = postid
         self.msg = msg 
