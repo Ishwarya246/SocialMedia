@@ -156,5 +156,15 @@ def showComment(current_user) :
 
     return response
 
-    
+@app.route("/showpost" , method = ["POST"]) 
+@token_required
+def showPost(current_user) :
+
+    record = Post.query.all()
+    response = []
+    for i in record:
+        response.append(i.as_dict())
+
+    return response
+
 
