@@ -94,7 +94,7 @@ def login():
 @token_required
 def post(current_user):
     data = request.get_json()
-
+    print(data)
     if not data or not data["image"] or not data["msg"]:
         return jsonify({"status" : "Cannot post"})
 
