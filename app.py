@@ -32,6 +32,8 @@ def token_required(f):
            data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
            # , options={'verify_exp': False}
            current_user = User.query.filter_by(userid = data["userid"]).first()
+           if current_user.validity == 0:
+                return jsonify({"status" : "Invalid Token"})
 
        except:
            return jsonify({"status": "Invalid Token"})
@@ -54,7 +56,8 @@ def signup():
         user = User(userid = str(uuid.uuid4()),
                     name = name,
                     email = email,
-                    password = generate_password_hash(password))
+                    password = generate_password_hash(password),
+                    validity = 1)
 
         db.session.add(user)
         db.session.commit()
@@ -80,6 +83,8 @@ def login():
 
         jwt_token = jwt.encode({"userid" : user.userid, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(days=365, seconds=0)},
                                 app.config["SECRET_KEY"])
+        setattr(user, "validity", 1)
+        db.session.commit()
         return jsonify({"status" : "Success", "token" : jwt_token})
 
     else:
@@ -177,3 +182,10 @@ def userProfile(current_user) :
 
     return response
 
+@app.route("/logout", methods = ["POST"])
+@token_required
+def logout(current_user):
+    setattr(current_user, "validity", 0)
+    db.session.commit()
+
+    return jsonify({"status" : "Success Logout"})

@@ -10,14 +10,16 @@ class User(db.Model) :
     name  = db.Column(db.String(100))
     email = db.Column(db.String(100))
     password = db.Column(db.String(256))
+    validity = db.Column(db.Integer)
 
 
-    def __init__(self, userid, name , email , password) :
+    def __init__(self, userid, name , email , password, validity) :
         # self.id = id
         self.userid= userid
         self.name =  name
         self.email = email
         self.password = password 
+        self.validity = validity
 
     def as_dict(self) : 
         return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
