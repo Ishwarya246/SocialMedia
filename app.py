@@ -166,4 +166,14 @@ def showPost(current_user) :
 
     return response
 
+@app.route("/userprofile" , methods = ["POST"])
+@token_required
+def userProfile(current_user) :
+    
+    record = Post.query.filter_by(userid = current_user.userid).all()
+    response = []
+    for i in record :
+        response.append(i.as_dict())
+
+    return response
 
