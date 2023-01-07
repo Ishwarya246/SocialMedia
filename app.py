@@ -16,7 +16,7 @@ db.init_app(app)
 
 @app.route("/")
 def home():
-    return "Home Page"
+    return "Welcome To Social Media Home Page"
 
 def token_required(f):
    @wraps(f)
@@ -171,6 +171,26 @@ def showPost(current_user) :
         response.append(i.as_dict())
 
     return response
+
+
+@app.route("/deletepost" , methods = ["POST"])
+@token_required 
+def deletePost(current_user) : 
+
+    data = request.get_json()
+
+    if not data or not data["postid"] :
+        return jsonify({"status" : "Invalid post id"})
+
+    Like.query.filter_by(postid = data["postid"]).delete()
+
+    Post.query.filter_by(postid = data["postid"]).delete()
+
+    Comment.query.filter_by(postid = data["postid"]).delete()
+
+    db.session.commit()
+    return jsonify({"status" : "Success"})
+
 
 @app.route("/userprofile" , methods = ["POST"])
 @token_required
