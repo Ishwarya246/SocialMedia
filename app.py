@@ -4,6 +4,7 @@ from functools import wraps
 from flask_cors import CORS
 from models.models import db, User, Like, Post, Comment
 import jwt, uuid, datetime
+from sqlalchemy import desc
 
 app = Flask(__name__)
 CORS(app)
@@ -164,7 +165,7 @@ def showComment(current_user) :
 @token_required
 def showPost(current_user) :
 
-    record = Post.query.all()
+    record = Post.query.order_by(desc(Post.created_time)).all()
     response = []
     for i in record:
         response.append(i.as_dict())
@@ -183,7 +184,7 @@ def userProfile(current_user) :
     return response
 
 @app.route("/logout", methods = ["POST"])
-@token_required
+@token_required 
 def logout(current_user):
     setattr(current_user, "validity", 0)
     db.session.commit()
