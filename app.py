@@ -161,9 +161,9 @@ def showComment(current_user) :
 
     return response
 
-@app.route("/showpost" , methods = ["POST"])
+@app.route("/latestpost" , methods = ["POST"])
 @token_required
-def showPost(current_user) :
+def latestPost(current_user) :
 
     record = Post.query.order_by(desc(Post.created_time)).all()
     response = []
@@ -171,6 +171,18 @@ def showPost(current_user) :
         response.append(i.as_dict())
 
     return response
+
+
+@app.route("/toppost" , methods = ["POST"])
+@token_required 
+def topPost(current_user) :
+
+    record = Post.query.order_by(desc(Post.no_of_likes)).all()
+    response = []
+    for i in record :
+        response.append(i.as_dict())
+
+    return response 
 
 
 @app.route("/deletepost" , methods = ["POST"])
