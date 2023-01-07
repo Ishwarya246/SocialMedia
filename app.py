@@ -222,3 +222,41 @@ def logout(current_user):
     db.session.commit()
 
     return jsonify({"status" : "Success Logout"})
+
+
+@app.route("/editname" , methods = ["POST"])
+@token_required
+def editname(current_user) :
+
+    data = request.get_json()
+
+    record = User.query.filter_by(userid=current_user.userid).first()
+    record.name = data["name"]
+
+    db.session.commit()
+    return jsonify({"status" : "Successfully changed"})
+
+
+@app.route("/editemail" , methods = ["POST"])
+@token_required
+def editemail(current_user) :
+
+    data = request.get_json()
+
+    record = User.query.filter_by(email=current_user.email).first()
+    record.email = data["email"]
+
+    db.session.commit()
+    return jsonify({"status" : "Successfully changed"})
+
+
+@app.route("/editpassword" , methods = ["POST"])
+@token_required
+def editpassword(current_user) :
+    
+    data = request.get_json()
+    record = User.query.filter_by(password=current_user.password).first()
+    record.password = generate_password_hash(data["password"])
+
+    db.session.commit()
+    return jsonify({"status" : "Successfully changed"})
