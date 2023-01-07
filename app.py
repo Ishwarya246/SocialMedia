@@ -69,7 +69,7 @@ def signup():
 @app.route("/login", methods = ["POST"])
 def login():
     data = request.get_json()
-    print(data)
+    
     if not data or not data.get("email") or not data.get("password"):
 
         return jsonify({"status" : "Enter valid email or password"})
@@ -94,12 +94,12 @@ def login():
 @token_required
 def post(current_user):
     data = request.get_json()
-    print(data)
+
     if not data or not data["image"] or not data["msg"]:
         return jsonify({"status" : "Cannot post"})
 
     record = Post(str(uuid.uuid4()), current_user.userid , data["image"] ,data["msg"] ,datetime.datetime.utcnow(), 0)
-
+    #print(record.postid, " " , record.no_of_likes , " " ,record.msg)
     db.session.add(record)
     db.session.commit()
 

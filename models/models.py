@@ -32,7 +32,7 @@ class Post(db.Model) :
     id = db.Column(db.Integer , primary_key = True)
     postid = db.Column(db.String(100), unique = True)
     userid = db.Column(db.String(100))  #foreign key
-    image = db.Column(db.String(500))
+    image = db.Column(db.Text(4294000000))
     msg = db.Column(db.String(500))
     created_time = db.Column(db.DateTime)
     no_of_likes = db.Column(db.Integer)
