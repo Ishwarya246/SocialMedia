@@ -86,7 +86,7 @@ def login():
                                 app.config["SECRET_KEY"])
         setattr(user, "validity", 1)
         db.session.commit()
-        return jsonify({"status" : "Success", "token" : jwt_token})
+        return jsonify({"status" : "Success", "token" : jwt_token , "name" : user.name})
 
     else:
         return jsonify({"status" : "Wrong password"})
@@ -128,7 +128,7 @@ def like(current_user):
         setattr(post, "no_of_likes", post.no_of_likes - 1)
 
     db.session.commit()
-    return jsonify({"status" : "Success"})
+    return jsonify({"no_of_likes" : post.no_of_likes})
     
 @app.route("/comment" , methods = ["POST"]) 
 @token_required
@@ -156,8 +156,13 @@ def showComment(current_user) :
     comment = Comment.query.filter_by(postid = data["postid"]).all()
 
     response = []
+
     for i in comment:
-        response.append(i.as_dict())
+        d = i.as_dict()
+        record = User.query.filter_by(userid = d["userid"] ).first()
+        d["name"] =  record.name
+        response.append(d)
+    response.reverse()
 
     return response
 
@@ -168,7 +173,12 @@ def latestPost(current_user) :
     record = Post.query.order_by(desc(Post.created_time)).all()
     response = []
     for i in record:
-        response.append(i.as_dict())
+
+        d = i.as_dict()
+        rec = User.query.filter_by(userid = d["userid"] ).first()
+        d["name"] =  rec.name
+
+        response.append(d)
 
     return response
 
@@ -180,6 +190,10 @@ def topPost(current_user) :
     record = Post.query.order_by(desc(Post.no_of_likes)).all()
     response = []
     for i in record :
+
+        d = i.as_dict()
+        rec = User.query.filter_by(userid = d["userid"] ).first()
+        d["name"] =  rec.name
         response.append(i.as_dict())
 
     return response 
@@ -194,11 +208,26 @@ def deletePost(current_user) :
     if not data or not data["postid"] :
         return jsonify({"status" : "Invalid post id"})
 
-    Like.query.filter_by(postid = data["postid"]).delete()
+    Like.query.filter_by(postid = data["postid"]).filter_by(userid = current_user.userid).delete()
 
-    Post.query.filter_by(postid = data["postid"]).delete()
+    Post.query.filter_by(postid = data["postid"]).filter_by(userid = current_user.userid).delete()
 
-    Comment.query.filter_by(postid = data["postid"]).delete()
+    Comment.query.filter_by(postid = data["postid"]).filter_by(userid = current_user.userid).delete()
+
+    db.session.commit()
+    return jsonify({"status" : "Success"})
+
+
+@app.route("/deletecomment" , methods = ["POST"])
+@token_required
+def deleteComment(current_user) :
+
+    data = request.get_json()
+
+    if not data or not data["commentid"] :
+        return jsonify({"status" : "Invalid comment id" })
+
+    Comment.query.filter_by(commentid = data["commentid"]).filter_by(userid = current_user.userid).delete()
 
     db.session.commit()
     return jsonify({"status" : "Success"})
@@ -214,6 +243,7 @@ def userProfile(current_user) :
         response.append(i.as_dict())
 
     return response
+
 
 @app.route("/logout", methods = ["POST"])
 @token_required 
