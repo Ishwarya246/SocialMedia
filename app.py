@@ -58,6 +58,7 @@ def signup():
                     name = name,
                     email = email,
                     password = generate_password_hash(password),
+                    photo = None ,
                     validity = 1)
 
         db.session.add(user)
@@ -237,7 +238,7 @@ def deleteComment(current_user) :
 @token_required
 def userProfile(current_user) :
     
-    record = Post.query.filter_by(userid = current_user.userid).all()
+    record = User.query.filter_by(userid = current_user.userid).all()
     response = []
     for i in record :
         response.append(i.as_dict())
@@ -264,7 +265,7 @@ def editname(current_user) :
     record.name = data["name"]
 
     db.session.commit()
-    return jsonify({"status" : "Successfully changed"})
+    return jsonify({"status" : "Success"})
 
 
 @app.route("/editemail" , methods = ["POST"])
@@ -273,11 +274,11 @@ def editemail(current_user) :
 
     data = request.get_json()
 
-    record = User.query.filter_by(email=current_user.email).first()
+    record = User.query.filter_by(userid = current_user.userid).first()
     record.email = data["email"]
 
     db.session.commit()
-    return jsonify({"status" : "Successfully changed"})
+    return jsonify({"status" : "Success"})
 
 
 @app.route("/editpassword" , methods = ["POST"])
@@ -285,8 +286,21 @@ def editemail(current_user) :
 def editpassword(current_user) :
     
     data = request.get_json()
-    record = User.query.filter_by(password=current_user.password).first()
+    record = User.query.filter_by(userid = current_user.userid).first()
     record.password = generate_password_hash(data["password"])
 
     db.session.commit()
-    return jsonify({"status" : "Successfully changed"})
+    return jsonify({"status" : "Success"})
+
+
+@app.route("/editphoto" , methods = ["POST"])
+@token_required
+def editphoto(current_user) :
+     
+    data = request.get_json()
+
+    record = User.query.filter_by(userid = current_user.userid).first()
+    record.photo = data["photo"]
+
+    db.session.commit()
+    return jsonify({"status" : "Success"})
