@@ -314,5 +314,5 @@ def userlist(current_user):
     for u in user:
         if u.userid == current_user.userid:
             continue;
-        response.append(u)
+        response.append(u.as_dict())
     return response
