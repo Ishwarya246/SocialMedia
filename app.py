@@ -304,3 +304,15 @@ def editphoto(current_user) :
 
     db.session.commit()
     return jsonify({"status" : "Success"})
+
+@app.route("/userlist", methods=["POST"])
+@token_required
+def userlist(current_user):
+
+    response = []
+    user = User.query.all()
+    for u in user:
+        if u.userid == current_user.userid:
+            continue;
+        response.append(u)
+    return response
