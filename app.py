@@ -305,7 +305,7 @@ def editphoto(current_user) :
     db.session.commit()
     return jsonify({"status" : "Success"})
 
-@app.route("/userlist", methods=["POST"])
+@app.route("/userlist", methods = ["POST"])
 @token_required
 def userlist(current_user):
 
@@ -313,6 +313,6 @@ def userlist(current_user):
     user = User.query.all()
     for u in user:
         if u.userid == current_user.userid:
-            continue;
+            continue
         response.append(u.as_dict())
     return response

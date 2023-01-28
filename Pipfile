@@ -13,5 +13,5 @@ flask-cors = "*"
 [dev-packages]
 
 [requires]
-python_version = "3.10"
-python_full_version = "3.10.9"
+python_version = "*"
+python_full_version = "*"
